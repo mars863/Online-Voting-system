@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Admin Results{% endblock %}
+{% block content %}
+<h4 class="mb-4">📊 Full Election Results (from ElectionResults VIEW)</h4>
+
+{% for eid, data in elections.items() %}
+<div class="card mb-4 p-3">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="mb-0">{{ data['title'] }} <small class="text-muted fs-6">(ID: {{ eid }})</small></h5>
+    <span class="badge
+      {% if data['status'] == 'active' %}bg-success
+      {% elif data['status'] == 'upcoming' %}bg-primary
+      {% else %}bg-secondary{% endif %} rounded-pill">
+      {{ data['status'].capitalize() }}
+    </span>
+  </div>
+
+  {% set total = data['candidates'] | sum(attribute='total_votes') %}
+  {% if total == 0 %}
+    <p class="text-muted">No votes cast yet.</p>
+  {% else %}
+    {% set winner = data['candidates'][0] %}
+    <div class="alert alert-success py-1 mb-2">
+      🏆 Leading: <strong>{{ winner['name'] }}</strong> with {{ winner['total_votes'] }} votes
+    </div>
+  {% endif %}
+
+  <table class="table table-sm table-bordered">
+    <thead class="table-light">
+      <tr><th>#</th><th>Candidate</th><th>Votes</th><th>Percentage</th></tr>
+    </thead>
+    <tbody>
+      {% for c in data['candidates'] %}
+        {% set pct = ((c['total_votes'] / total * 100) if total > 0 else 0) | round(1) %}
+        <tr {% if loop.first and total > 0 %}class="table-success"{% endif %}>
+          <td>{{ loop.index }}</td>
+          <td>{{ c['name'] }}</td>
+          <td>{{ c['total_votes'] }}</td>
+          <td>
+            <div class="progress" style="height:16px">
+              <div class="progress-bar" style="width:{{ pct }}%">{{ pct }}%</div>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot><tr><td colspan="2"><strong>Total</strong></td><td><strong>{{ total }}</strong></td><td></td></tr></tfoot>
+  </table>
+</div>
+{% endfor %}
+
+<a href="{{ url_for('admin_panel') }}" class="btn btn-outline-secondary">← Admin Panel</a>
+{% endblock %}

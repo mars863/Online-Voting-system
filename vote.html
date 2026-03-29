@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Cast Vote{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card p-4">
+      <h4 class="text-primary mb-1">{{ election['title'] }}</h4>
+      <small class="text-muted">
+        Ends: {{ election['end_time'][:16] }}
+      </small>
+      <hr/>
+
+      {% if already_voted %}
+        <div class="alert alert-warning">
+          You have already cast your vote in this election.
+        </div>
+      {% else %}
+        <p class="mb-3">Select one candidate and confirm your vote. <strong>This cannot be undone.</strong></p>
+        <form method="POST" action="{{ url_for('cast_vote') }}"
+              onsubmit="return confirm('Confirm your vote? This action is final.');">
+          <input type="hidden" name="election_id" value="{{ election['election_id'] }}"/>
+
+          {% for c in candidates %}
+          <div class="form-check border rounded p-3 mb-2">
+            <input class="form-check-input" type="radio" name="candidate_id"
+                   id="c{{ c['candidate_id'] }}" value="{{ c['candidate_id'] }}" required/>
+            <label class="form-check-label fs-5 ms-2" for="c{{ c['candidate_id'] }}">
+              {{ c['name'] }}
+            </label>
+          </div>
+          {% endfor %}
+
+          <div class="mt-3 d-flex gap-2">
+            <button type="submit" class="btn btn-success">Submit Vote</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

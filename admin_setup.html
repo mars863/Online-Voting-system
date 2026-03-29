@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Admin Setup{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card p-4 mt-3">
+      <h4 class="mb-2 text-primary">First-Time Admin Setup</h4>
+      <p class="text-muted mb-3">Only a registered voter can become owner. Enter voter credentials and owner setup key.</p>
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label">Registered Voter Email</label>
+          <input type="email" name="email" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Voter Password</label>
+          <input type="password" name="password" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Owner Setup Key</label>
+          <input type="password" name="admin_key" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Create Admin Account</button>
+      </form>
+      <p class="text-center mt-3 mb-0"><a href="{{ url_for('admin_login') }}">Back to Admin Login</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

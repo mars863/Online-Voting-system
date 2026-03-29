@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Admin Login{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card p-4 mt-3">
+      <h4 class="mb-3 text-warning">Admin Authentication</h4>
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label">Admin Email</label>
+          <input type="email" name="email" class="form-control" required
+                 placeholder="admin@vote.com"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" required/>
+        </div>
+        <button type="submit" class="btn btn-warning w-100">Login as Admin</button>
+      </form>
+      <hr/>
+      {% if not has_admin %}
+      <div class="alert alert-info py-2">
+        No admin exists yet. Create the first admin account to initialize control.
+      </div>
+      <p class="text-center mb-2"><a href="{{ url_for('admin_setup') }}">Create First Admin</a></p>
+      {% endif %}
+      <p class="text-center mb-0"><a href="{{ url_for('login') }}">Voter Login</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
